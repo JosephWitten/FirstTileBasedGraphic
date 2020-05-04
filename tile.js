@@ -1,3 +1,4 @@
+
 let map = [
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,],
     [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,],
@@ -56,6 +57,7 @@ const ctx = canvas.getContext("2d");
 const numberOfSquares = 50
 const widthOfSquare = canvas.width/numberOfSquares
 const heightOfSquare = canvas.height/numberOfSquares
+const charAmount  = 10
 
 function between(min, max) {
     return Math.floor(Math.random() * (max-min) + min)
@@ -63,18 +65,18 @@ function between(min, max) {
 
 window.onload = async function () {
 
-    charWidth = this.between(1, numberOfSquares -1)
-    charHeight = this.between(1, numberOfSquares - 1)
+    let char = new Char(charAmount)
+    let charPosArray = char.getCharPos()
 
     while(true) {
         this.draw()
-        map[charWidth][charHeight] = 0
-        charPos = this.walk(charWidth, charHeight)
-        charWidth = charPos[0]
-        charHeight = charPos[1]
-        map[charWidth][charHeight] = 3
+        for (let i = 0; i < charPosArray.length; i++) {
+            map[charPosArray[i][0]][charPosArray[i][1]] = 0
+            charPosArray[i] = this.walk(charPosArray[i][0], charPosArray[i][1])
+            map[charPosArray[i][0]][charPosArray[i][1]] = 3
+    }
 
-        await this.sleep(1000)
+        await this.sleep(100)
         this.clear()
     
     }
@@ -115,6 +117,9 @@ function draw() {
 }
 
 function walk(charWidth, charHeight) {
+    oldCharPos = []
+    oldCharPos.push(charWidth)
+    oldCharPos.push(charHeight)
     randomDirection = between(0, 4)
     if (randomDirection == 0) {
         charHeight--;
@@ -131,8 +136,13 @@ function walk(charWidth, charHeight) {
     charPos = []
     charPos.push(charWidth)
     charPos.push(charHeight)
-    return charPos
+    if (map[charWidth][charHeight] == 1) {
+        return oldCharPos
+    } else {
+        return charPos
+    }
 }
+    
 
 function clear() {
     ctx.clearRect(0,0, canvas.width, canvas.height)
