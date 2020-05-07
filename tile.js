@@ -1,3 +1,10 @@
+//Get Population
+// Fitness function
+// Mutate
+//Timeout function
+
+//Fitness function, distance from end point (sum of moves to get to coord of end point), + new ground discovered
+
 
 let map = [
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,],
@@ -67,7 +74,9 @@ let charPath = []
 for (let i = 0; i < charAmount; i++) {
     charPath.push([])
 }
-
+const FinishPoint = [1, 1]
+let deathPos = []
+let fitness = []
 
 function between(min, max) {
     return Math.floor(Math.random() * (max-min) + min)
@@ -77,23 +86,56 @@ window.onload = async function () {
 
     let char = new Char(charAmount)
     //If not coord set, randomly gen coords
-    if (charPosArray.length == 0) {
-    charPosArray = char.getCharPos() 
-    }
+    // if (charPosArray.length == 0) {
+    // charPosArray = char.getCharPos() 
+    // }
 
     while(true) {
         this.draw()
+  
         for (let i = 0; i < charPosArray.length; i++) {
             map[charPosArray[i][0]][charPosArray[i][1]] = 0
             charPosArray[i] = this.walk(charPosArray[i][0], charPosArray[i][1], i)
+
+            try {
             map[charPosArray[i][0]][charPosArray[i][1]] = 3
+            
+            } catch {
+                this.getFitness(i)
+                this.console.log(fitness)
+                this.die(i)
+                
+            }
+         
+         
     }
-        this.console.log(charPath)
+        // if (deathPos.length == charAmount) {
+        // // this.console.log(deathPos)
+        // fitness = this.getFitness(deathPos)
+        // this.console.log(fitness)
+        // break
+        // }
+   
 
         await this.sleep(10)
         this.clear()
     
     }
+}
+
+function die(i) {
+
+    charPosArray.splice(i, 1)
+}
+
+
+function getFitness() {        
+        xDistance = FinishPoint[0] - deathPos[0]
+        yDistance = FinishPoint[1] - deathPos[1]
+        distance = (Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2)))
+        fitness.push(distance)
+    
+    return fitness
 
 }
 
@@ -155,7 +197,9 @@ function walk(charWidth, charHeight, i) {
     charPos.push(charWidth)
     charPos.push(charHeight)
     if (map[charWidth][charHeight] == 1) {
-        return oldCharPos
+        // return oldCharPos
+        deathPos = []
+        deathPos = oldCharPos
     } else {
         return charPos
     }
