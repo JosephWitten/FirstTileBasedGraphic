@@ -90,6 +90,8 @@ window.onload = async function () {
     // charPosArray = char.getCharPos() 
     // }
 
+
+
     while(true) {
         this.draw()
   
@@ -129,7 +131,7 @@ function die(i) {
 }
 
 
-function getFitness() {        
+function getFitness(i) {
         xDistance = FinishPoint[0] - deathPos[0]
         yDistance = FinishPoint[1] - deathPos[1]
         distance = (Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2)))
@@ -144,6 +146,7 @@ function draw() {
     //Drawing map
     const mapHeight = 50;
     const mapWidth = 50;
+    map[FinishPoint[0]][FinishPoint[1]] = 2
     for (let i = 0; i < mapHeight; i++) {
         for (let j = 0; j < mapWidth; j++) {
             if (map[i][j] == 0) { 
@@ -161,6 +164,12 @@ function draw() {
             if(map[i][j] == 3) {
                 ctx.beginPath();
                 ctx.fillStyle = "red"
+                ctx.fillRect(widthOfSquare*j, heightOfSquare*i, widthOfSquare, heightOfSquare)
+                ctx.stroke()
+            }
+            if(map[i][j] == 2) {
+                ctx.beginPath();
+                ctx.fillStyle = "yellow"
                 ctx.fillRect(widthOfSquare*j, heightOfSquare*i, widthOfSquare, heightOfSquare)
                 ctx.stroke()
             }
